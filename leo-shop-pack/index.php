@@ -86,7 +86,7 @@ if ($page_name == '') {
 } elseif ($page_name == 'newBeer.php'){
     include $browser_t . '/newbeer.php';
 
-} elseif ($page_name == 'beer.html?id='.$_GET['id']) {
+} elseif (isset($_GET['id']) && $page_name == 'beer.html?id='.$_GET['id']) {
     include $browser_t . '/beer.html';
 
 } else {
