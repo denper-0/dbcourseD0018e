@@ -1,0 +1,18 @@
+body{font-family: 'Exo 2', sans-serif;}
+.transition {
+    -webkit-transition: height 0.5s;
+    -moz-transition: height 0.5s;
+    transition: height 0.5s;
+}
+.well{
+    border-radius:5px;
+    box-shadow:0px 0px 5px  #777;
+    padding:20px;
+}
+
+.review-stars
+{
+    margin: 10px 0;
+    font-size:50px;
+    color:#fa4b2a;
+}

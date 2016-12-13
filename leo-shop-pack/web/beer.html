@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Omnipollo Bottle Shop | Product</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link href="web/css/style.css" rel="stylesheet" type="text/css" media="all"/>
+    <link href="web/css/form.css" rel="stylesheet" type="text/css" media="all"/>
+    <link href='http://fonts.googleapis.com/css?family=Exo+2' rel='stylesheet' type='text/css'>
+    <!-- review start-->
+    <link rel="stylesheet" href="web/css/bootstrap.min.css">
+    <link href="web/css/review.css" rel="stylesheet" type="text/css" media="all"/>
+    <link href="http://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+    <!-- review end-->
+    <link href="web/css/comment.css" rel="stylesheet" type="text/css" media="all"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="web/js/bootstrap.min.js"></script>
+    <script src="web/js/jquery1.min.js"></script>
+    <script src="web/js/review2.js"></script>
+    <script type="text/javascript" src="web/js/jquery.jscrollpane.min.js"></script>
+    <script src="https://use.fontawesome.com/48347681fb.js"></script>
+
+    
+    <script type="text/javascript" id="sourcecode">
+        $(function () {
+            $('.scroll-pane').jScrollPane();
+        });
+    </script>
+    <!-- start details -->
+    <script src="web/js/slides.min.jquery.js"></script>
+    <script>
+        $(function () {
+            $('#products').slides({
+                preload: true,
+                preloadImage: 'img/loading.gif',
+                effect: 'slide, fade',
+                crossfade: true,
+                slideSpeed: 350,
+                fadeSpeed: 500,
+                generateNextPrev: true,
+                generatePagination: false
+            });
+        });
+    </script>
+<link rel="stylesheet" href="web/css/etalage.css">
+</head>
+<body>
+<div class="main">
+    <div class="wrap container">
+    <?php
+        $id = $_GET['id'];
+        $query = $db->prepare("SELECT * FROM products where prodID = ?");
+        $query->execute(array($id));
+        $row = $query->fetch();
+        $beer = $row[2];
+        switch ($beer) {
+            case 0:
+            $beer = "Imperial Stout";
+            $case = "IS";
+            break;
+            case "1":
+            $beer = "Pale ale";
+            $case = "PA";
+            break;
+        }
+        echo '<ul class="breadcrumb breadcrumb__t"><a class="home" href="index.html">Home</a> / <a href="index.html#' . $case . '">' . $beer . '</a> / ' . $row[1];
+        echo '</ul>
+        <div class="row text-center">
+            <div class="grid images_3_of_2">
+
+                <img src="' . $row[6] . '" class="img-responsive"/>
+
+                <div class="clearfix"></div>
+            </div>
+            <div class="desc1 span_3_of_2">
+                <h3 class="m_3">'. $row[1] . '</h3>
+                <div class="btn_form">
+                    <form action="dbstuff.php" method="post">
+                        <input type="submit" value="buy" title="">
+                        <input type="hidden" name="beerID" value="'. $row[0] . '">
+                    </form>
+                </div>
+                <p class="m_text2"><span>' . $row[5] . '</span></p>
+                <br>
+                <div class="m_text4">
+                    <p>'. $beer . ', ' . $row[4] . '% by vol.</p>
+                    <p>Brewed at ' . $row[3] . '</p>
+                    <!--<p>Artwork by Karl Grandin.</p>-->
+                </div>
+                
+                ';
+                if (isset($_SESSION['email'])) { 
+
+                /* Review, reject and send button */
+                echo '<div class="container">
+                    <div class="row" style="margin-top:30px;">
+                        
+                            <div class="well">
+                                <div class="text-right">
+                                    <a class="btn btn-warning btn-lg" id="show-review-textarea"><span class="glyphicon glyphicon-comment"></span> Write a Review</a>
+                                </div>
+                                <div class="row" id="submit-review" style="display:none;">
+                                    <div class="col-md-12">
+                                        <form accept-charset="UTF-8" action="dbstuff.php" method="post">
+                                            <input id="hide-stars" name="rating" type="hidden">
+                                            <textarea class="form-control transition" cols="100" id="get-review" name="comment" placeholder="Begin Here..." rows="10"></textarea>
+
+                                            <div class="text-left">
+                                                <div class="review-stars ratings" data-rating="0"></div>
+                                            </div>
+                                            <div class="text-right">
+                                            <i>
+                                            <a class="btn btn-danger btn-lg" href="#" id="reject-review" style="display:none; margin-right: 10px;">Reject</a>
+                                            <button class="btn btn-success btn-lg" name="beerIDcomment" value="'. $row[0] . '" type="submit">Send</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            ';}
+            echo '</div>
+            <div class="clear"></div>
+        </div>
+        '?>
+        <div class="clear"></div>
+        <div class="row container">
+                <hr>
+                
+                <?php
+                if (isset($_SESSION['email'])){
+                $email = $_SESSION['email'];
+                
+                $query = $db->prepare("SELECT userID FROM users WHERE email = '$email'");
+                $query->execute();
+                $uid = $query->fetch()['userID'];
+                }
+                $id = $_GET['id'];
+
+                $query = $db->prepare("SELECT comment, rating, `date`, firstname FROM usersinput JOIN users ON users.userID = usersinput.userID WHERE productID = '$id'");
+                $query->execute();
+                $res = $query->fetchAll();
+                $rows = $query->rowCount();
+
+                $query = $db->prepare("SELECT rating FROM usersinput WHERE rating != 0 AND productID = $id");
+                $query->execute();
+                $row = $query->rowCount();
+                $ratings = $query->fetchAll();
+                $totalRating = "";
+
+                if ($row != 0){
+                for ($i = 0; $i < $row; $i++){
+                    $totalRating += $ratings[$i]['rating'];
+                     }
+                $totalRating = round($totalRating / $row, 1);
+            }
+
+
+                echo '<h4 id="addComment">Reviews | ';?>
+                <?php if ($row != 0) { echo 'Average <i class="fa fa-star"></i> rating: ' . $totalRating . ' / 5 </h4>';}
+                else {echo "No rating yet. </h4>";}
+                
+                if ($rows != 0) {
+                for ($i = 0; $i < $rows; $i++){
+                    echo '<hr>
+                    <ul class="media-list comments">
+                        <li class="media">
+                        <div class="media-body">
+                            <h5 class="media-heading pull-left">
+                                <i class="fa fa-user-circle-o fa-5x" aria-hidden="true"></i>
+                                ' . $res[$i]['firstname'] . '
+                            </h5>
+                            <br class="clearfix">
+                            <br class="clearfix">
+                            <br class="clearfix">
+                            <div class="comment-info pull-left">
+                                <button class="btn btn-secondary btn-sm" style="cursor:default" disabled><i class="fa fa-clock-o"></i>   ' .$res[$i]['date'] . '</button>
+                            </div>
+                            <br class="clearfix">
+                            <p class="well">'; 
+                            if ($res[$i]['rating'] == 0) { echo 'Did not rate -- ' . $res[$i]["comment"] . '</p>';} else {
+                            echo 'Rating: (' . $res[$i]['rating'] . ') -- ' . $res[$i]['comment'] . '</p>'; 
+                            } 
+                        echo '</div>
+                    </li>
+                        
+                    </ul>
+                    ';}
+                }
+             ?>
+            </div>
+            
+    </div>
+    </div>
+
+
+
+</body>
+</html>

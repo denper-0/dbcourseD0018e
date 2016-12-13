@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Omnipollo Bottle Shop | Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link href="web/css/style.css" rel="stylesheet" type="text/css" media="all"/>
+    <link href="web/css/form.css" rel="stylesheet" type="text/css" media="all"/>
+    <link href='http://fonts.googleapis.com/css?family=Exo+2' rel='stylesheet' type='text/css'>
+    <script type="text/javascript" src="web/js/jquery1.min.js"></script>
+    <link rel="stylesheet" href="web/css/fwslider.css" media="all">
+    <script src="web/js/jquery-ui.min.js"></script>
+    <script src="web/js/css3-mediaqueries.js"></script>
+    <script src="web/js/fwslider.js"></script>
+    <!--end slider -->
+    <script src="web/js/jquery.easydropdown.js"></script>
+</head>
+<body>
+<div class="main">
+    <div class="wrap container">
+        <div class="section group">
+            <!-- <div class="cont span_2_of_3"> -->
+            <div class="row text-center">
+            <!-- Pale ales -->
+                    <?php
+                    echo '<h2 class="head" id=PA>Pale ale</h2>
+                    <div class="top-box">';
+                    $query = $db->prepare("SELECT * FROM products where style = ?");
+                    $query->execute(array(1));
+                    $result = $query->fetchAll();
+                    
+                    foreach ($result as $row){
+                        $prodID = $row[0];
+                    echo '<div class="col_1_of_3 span_1_of_3">
+                        <a href="beer.html?id='. $prodID .'">
+                            <div class="inner_content clearfix">
+                                <div class="product_image">
+                                    <img src="' . $row[6] . '" alt=""/>
+                                </div>
+                                <!-- <div class="sale-box"><span class="on_sale title_shop">New</span></div> -->
+                                <div class="price">
+                                    <div class="cart-left">
+                                        <p class="title">'. $row[1] . '</p>
+                                        <div class="price1">
+                                            <span class="actual">' .$row[7] . ' kr</span>
+                                        </div>
+                                    </div>
+                                    <div class="cart-right"></div>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>'; }
+                    ?>
+                    <div class="clear"></div>
+                </div>
+                    
+                <!-- Imperial Stouts -->
+                    <?php
+                    echo '<h2 class="head" id=IS>Imperial stout</h2>
+                    <div class="top-box1">';
+                    $query = $db->prepare("SELECT * FROM products where style = ?");
+                    $query->execute(array(0));
+                    $result = $query->fetchAll();
+                    
+                    foreach ($result as $row){
+                        $prodID = $row[0];
+                    echo '<div class="col_1_of_3 span_1_of_3">
+                        <a href="beer.html?id='. $prodID .'">
+                            <div class="inner_content clearfix">
+                                <div class="product_image">
+                                    <img src="' . $row[6] . '" alt=""/>
+                                </div>
+                                <!-- <div class="sale-box"><span class="on_sale title_shop">New</span></div> -->
+                                <div class="price">
+                                    <div class="cart-left">
+                                        <p class="title">'. $row[1] . '</p>
+                                        <div class="price1">
+                                            <span class="actual">' .$row[7] . ' kr</span>
+                                        </div>
+                                    </div>
+                                    <div class="cart-right"></div>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>'; }
+                    ?>
+                    <div class="clear"></div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

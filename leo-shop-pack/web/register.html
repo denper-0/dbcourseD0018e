@@ -1,0 +1,50 @@
+<html>
+<head>
+    <title>Omnipollo Bottle Shop | Register</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link href="web/css/style.css" rel="stylesheet" type="text/css" media="all"/>
+    <link href='http://fonts.googleapis.com/css?family=Exo+2' rel='stylesheet' type='text/css'>
+    <script type="text/javascript" src="web/js/jquery1.min.js"></script>
+    <script src="web/js/jquery.easydropdown.js"></script>
+</head>
+<body>
+<div class="register_account">
+    <div class="wrap">
+        <h4 class="title">Create an Account</h4>
+        <form action="dbstuff.php" method="post">
+            <div class="col_1_of_2 span_1_of_2">
+                <div><input type="text" value="First name" name="firstname" onfocus="this.value = '';"
+                            onblur="if (this.value == '') {this.value = 'firstname';}"></div>
+                            <div><input type="text" value="Last name" name="lastname" onfocus="this.value = '';"
+                            onblur="if (this.value == '') {this.value = 'lastname';}"></div>
+                <!-- <div><input type="text" value="Company Name" onfocus="this.value = '';"
+                            onblur="if (this.value == '') {this.value = 'Company Name';}"></div> -->
+                <div><input type="text" value="E-Mail" name="email" onfocus="this.value = '';"
+                            onblur="if (this.value == '') {this.value = 'Email';}"></div>
+                <div><input type="text" value="password" name="password" onfocus="this.value = '';"
+                            onblur="if (this.value == '') {this.value = 'Password';}"></div>
+            </div>
+            <div class="col_1_of_2 span_1_of_2">
+                <div><input type="text" value="Address" name="address" onfocus="this.value = '';"
+                            onblur="if (this.value == '') {this.value = 'Address';}"></div>
+                            <div><input type="text" value="Country" name="country" onfocus="this.value = '';"
+                            onblur="if (this.value == '') {this.value = 'Country';}"></div>
+
+                <div><input type="text" value="City" name="city" onfocus="this.value = '';"
+                            onblur="if (this.value == '') {this.value = 'City';}"></div>
+                <div>
+                </div>
+                <div><input type="text" value="Phone Number" name="phone" onfocus="this.value = '';"
+                            onblur="if (this.value == '') {this.value = 'phonenumber';}"></div>
+            </div>
+            <!--<input type="Submit" name="register" value="register">-->
+            <button class="grey" name="register">Submit</button>
+            <p class="terms">By clicking 'Create Account' you agree to the <a href="#">Terms &amp; Conditions</a>.</p>
+            </form>
+            <div class="clear"></div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
