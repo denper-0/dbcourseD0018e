@@ -17,81 +17,65 @@
 </head>
 <body>
 <div class="container">
-<html>
-<body>
-    <h1>Orders are displayed by time.</h1>
+    <h1>Orders are sorted by date</h1>
     <hr>
     <table class="table table-striped table-hover table-bordered">
         <?php
-        if (isset($_SESSION['email'])){
-        $uemail = $_SESSION['email'];
-        $adminCheck = $db->prepare("SELECT admin FROM users WHERE email = '$uemail'");
-        $adminCheck->execute();
-        $admin = $adminCheck->fetch();
-        $row = $adminCheck->rowCount();
+        echo '<tbody>';
+            $query2 = $db->prepare("SELECT userID FROM users where email = ?");
+            $email = $_SESSION['email'];
+            $query2->execute(array($email));
+            $uid = $query2->fetch()[0];
+            $query = $db->prepare("SELECT * FROM `order` where userID = '$uid'");
+            $query->execute();
+            if ($query->rowCount() != 0) {
 
-            if ($admin['admin'] == 1) {
-            $query = $db->prepare("SELECT orderID, `date`, userID, paid, shipped FROM `order` ORDER BY `date`");
+
+            $query = $db->prepare("SELECT orderinfo.orderID,  `date`, userID, name, quantity, paid, shipped, price FROM orderinfo
+                                LEFT JOIN `order` ON orderinfo.orderID = order.orderID LEFT JOIN products ON orderinfo.productID = products.prodID");
             $query->execute();
             $res = $query->fetchAll();
-            $row = $query->rowCount();
-            if ($row == 0){
-                echo "There are no orders";
-            } else {
-            echo '<tbody>';
-                echo "<br>";
-                // PRINTING ALL THAT ARE NOT SHIPPED
-                for ($i = 0; $i < $row; $i++){
-                    if (($res[$i]['shipped']) != "yes"){
-                          echo '<tr>
-                                <th>Order number</th>
-                                <th>userID</th>
-                                <th>Date</th>
-                                <th>Paid</th>
-                                <th>Shipped</th>
-                                </tr>
+
+            $totalCost = 0;
+            $shipping = 70;
+            echo "<br>";
+            $ordID = null;
+            foreach ($res as $row){
+                if ((is_null($ordID) || ($ordID == $row['orderID']))) {
+                        $totalCost = $totalCost + ($row['quantity'] * $row['price']);
+                    }
+                if ((is_null($ordID) || ($ordID != $row['orderID']))) {
+                        echo '<tr>
+                            <th>Order number</th>
+                            <th>Date and time</th>
+                            <th>Paid</th>
+                            <th>Shipped</th>
+                            </tr>
                             <tr>
-                            <td>' . $res[$i]['orderID'] . ' </td>
-                            <td>' . $res[$i]['userID'] . '</td>
-                            <td>' . $res[$i]['date'] . '</td>
-                            <td>' . $res[$i]['paid'] . '</td>
-                            <td>
+                        <td>' . $row['orderID'] . ' </td>
+                        <td>' . $row['date'] . '</td>
+                        <td>' . $row['paid'] . '</td>
+                                                    <td>
                             <form action="dbstuff.php" method="post" name="">
-                            <input type="text-center" align="right" class="form-control input-sm" type="" name="updateShipping" value="' . $res[$i]['shipped'] . '">
-                            <input type="hidden" name="updateOrder" value="'. $res[$i]['orderID'] . '">
+                            <input type="text-center" align="right" class="form-control input-sm" type="" name="updateShipping" value="' . $row['shipped'] . '">
+                            <input type="hidden" name="updateOrder" value="'. $row['orderID'] . '">
                             </form>
                             </td>
-                    </tr>';
-                    // PRINTING ALL SHIPPED
-                    } else {
-                        echo '<tr>
-                                <th>Order number</th>
-                                <th>userID</th>
-                                <th>Date</th>
-                                <th>Paid</th>
-                                <th>Shipped</th>
-                                </tr>
-                            <tr>
-                            <td>' . $res[$i]['orderID'] . ' </td>
-                            <td>' . $res[$i]['userID'] . '</td>
-                            <td>' . $res[$i]['date'] . '</td>
-                            <td>' . $res[$i]['paid'] . '</td>
-                            <td>' . $res[$i]['shipped'] . '</td>';
-                            /*<form action="dbstuff.php" method="post" name="">
-                            <input type="text-center" align="right" class="form-control input-sm" type="" name="updateShipping" value="' . $res[$i]['shipped'] . '">
-                            <input type="hidden" name="updateOrder" value="'. $res[$i]['orderID'] . '">
-                            </form>
-                            </td>*/
-                        echo '</tr>';
-                        }
+                        </tr>
+                        <tr>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        </tr>';
                     }
-                }
-                } else {
-                    echo "You do not have access here.";
-            }
-            } else {
-                echo "You do not have access here.";
+                    echo '<tr>
+                    <td>' . $row['name'] . '</td>
+                    <td> '. $row['quantity'] . ' </td>';
+            $ordID = $row['orderID']; 
         }
+
+        } else {
+        echo 'There is no orders.';
+      } 
 
       ?>
         </tbody>
